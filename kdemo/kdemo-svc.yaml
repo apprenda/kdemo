@@ -1,9 +1,8 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: kdemo
+  name: kdemo-svc
   labels:
-    name: kdemo
     visualize: 'true'
 spec:
   selector:

@@ -28,7 +28,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 )
 
 // Grid defines a grid of iframes
@@ -57,17 +59,27 @@ func (grid Grid) Range() [][]float32 {
 // It accepts two parameters, `cols` and `rows` to define how the iframe grid is generated.
 func main() {
 
+	bgColor := "green"
+
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		bgColor = "red"
+	}()
+
 	const pod = `
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta http-equiv="Cache-control" content="No-Cache">
    	    <link type="image/x-icon" href="http://apprenda.com/favicon.ico" rel="shortcut icon" />
 		<title>K8s Simple Demo</title>
 	</head>
 	<body style="font-family: Helvetica; font-size: .7em; text-align: center">
 		<h1>I'm a Kubernetes Pod!</h1>
-        <h3 style="padding: 1em; background-color: green; blue: white;">ID: %q</h3>
+        <h3 style="padding: 1em; background-color: %s; color: white;">ID: %q</h3>
 	</body>
 </html>`
 
@@ -76,7 +88,8 @@ func main() {
 <html>
 	<head>
 		<meta charset="UTF-8">
-    	    <link type="image/x-icon" href="http://apprenda.com/favicon.ico" rel="shortcut icon" />
+		<meta http-equiv="Cache-control" content="No-Cache">
+    	<link type="image/x-icon" href="http://apprenda.com/favicon.ico" rel="shortcut icon" />
 		<title>K8s Simple Demo</title>
 	</head>
 	<body style="margin: 0; padding: 0; font-family: Helvetica; text-align: center">
@@ -95,10 +108,16 @@ func main() {
 	tmpl := template.Must(template.New("gridTmpl").Parse(gridTemplate))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, pod, hostname)
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
+		w.Header().Set("Pragma", "no-cache")                                   // HTTP 1.0.
+		w.Header().Set("Expires", "0")                                         // Proxies.
+		fmt.Fprintf(w, pod, bgColor, hostname)
 	})
 
 	http.HandleFunc("/grid", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
+		w.Header().Set("Pragma", "no-cache")                                   // HTTP 1.0.
+		w.Header().Set("Expires", "0")                                         // Proxies.
 		var cols, rows int
 		cols, err := strconv.Atoi(r.FormValue("cols"))
 		if err != nil {
