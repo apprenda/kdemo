@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kdemo-ing
+spec:
+  rules:
+  - host: kdemo.192.168.42.2.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kdemo-svc
+          servicePort: 8080

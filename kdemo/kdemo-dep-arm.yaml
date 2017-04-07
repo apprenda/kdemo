@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion:	extensions/v1beta1
+metadata:
+  name: kdemo-dep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: kdemo
+        visualize: 'true'
+        blinkt: show
+    spec:
+      containers:
+      - name: kdemo
+        image: ikester/kdemo:v1arm7
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "20Mi"
+            cpu: "100m"
+          limits:
+            memory: "50Mi"
+            cpu: "200m"
+      terminationGracePeriodSeconds: 1

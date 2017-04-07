@@ -15,3 +15,4 @@ spec:
         image: ikester/kdemo:v1
         ports:
         - containerPort: 8080
+      terminationGracePeriodSeconds: 5
