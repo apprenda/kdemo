@@ -28,10 +28,10 @@ docker push <your_image_tag>
 
 ## Creating the Kubernetes Objects
 
-Once your Docker image has been published you can use the sample descriptor files in the `kdemo` folder to create the relevant objects in a Kubernetes cluster. TO USE YOUR OWN IMAGE MAKE SURE YOU REPLACE THE `image` FIELD IN THE `kdemo-dep.yaml` FILE WITH THE TAG YOU USED ABOVE.
+Once your Docker image has been published you can use the sample descriptor files in the `kubernetes` folder to create the relevant objects in a Kubernetes cluster. TO USE YOUR OWN IMAGE MAKE SURE YOU REPLACE THE `image` FIELD IN THE `kdemo-dep.yaml` FILE WITH THE TAG YOU USED ABOVE.
 ```
-kubectl create -f kdemo/kdemo-dep.yaml
-kubectl create -f kdemo/kdemo-svc.yaml
+kubectl create -f kubernetes/kdemo-dep.yaml
+kubectl create -f kubernetes/kdemo-svc.yaml
 ```
 This will create a Deployment and related Service using a `NodePort`. Find the dynamically allocated Node port (with something like `kubectl describe svc/kdemo-svc`) to access the Service from outside the cluster. If you have an Ingress Controller configured in your cluster, you may find the `kdemo-ing.yaml` file useful in creating an Ingress for this Deployment.
 
