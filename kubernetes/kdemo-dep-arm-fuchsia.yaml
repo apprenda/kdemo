@@ -1,7 +1,7 @@
 kind: Deployment
 apiVersion:	extensions/v1beta1
 metadata:
-  name: kdemo-dep
+  name: kdemo-dep-fuchsia
 spec:
   replicas: 1
   template:
