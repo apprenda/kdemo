@@ -10,7 +10,7 @@ spec:
         name: kdemo
         visualize: 'true'
         blinkt: show
-        blinktColor: '5BBCB0'
+        blinktColor: 'FB54F2'
     spec:
       containers:
       - name: kdemo
